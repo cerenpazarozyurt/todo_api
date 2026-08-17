@@ -74,4 +74,16 @@ class TodoController extends Controller
         $todo->delete();
         return response()->json(["message" => "Todo silindi."], 200);
     }
+
+    public function toggle(Request $request, string $id)
+    {
+        $todo = Todo::findOrFail($id);
+
+        if($todo->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+        }
+        $todo->is_completed = !$todo->is_completed;
+        $todo->save();
+        return response()->json($todo, 200);
+    }
 }

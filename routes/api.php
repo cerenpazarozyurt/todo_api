@@ -14,4 +14,5 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('todos', TodoController::class);
+    Route::patch('/todos/{id}/toggle', [TodoController::class, 'toggle']);
 });
