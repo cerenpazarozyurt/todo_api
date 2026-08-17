@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,5 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json([
                 'message' => 'Kayıt bulunamadı.',
             ], 404);
+        });
+
+        $exceptions->render(function (AuthenticationException $e, $request) {
+            return response()->json([
+                'message' => 'Giriş yapmanız gerekiyor.',
+            ], 401);
         });
     })->create();
