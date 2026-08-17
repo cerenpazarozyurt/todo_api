@@ -32,9 +32,15 @@ class TodoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        $todo = Todo::findOrFail($id);
+
+        if($todo->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+        }
+
+        return response()->json($todo, 200);
     }
 
     /**
