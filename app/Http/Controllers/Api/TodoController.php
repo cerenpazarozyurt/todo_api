@@ -18,7 +18,7 @@ class TodoController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        return $user->todos;
+        return $this->successResponse($user->todos, 'Todolar listelendi', 200);
     }
 
     /**
@@ -28,7 +28,7 @@ class TodoController extends Controller
     {
         $user = $request->user();
         $todo = $user->todos()->create($request->only(['title', 'description']));
-        return response()->json($todo, 201);
+        return $this->successResponse($todo, 'Todo oluşturuldu', 201);
     }
 
     /**
@@ -39,10 +39,10 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);
 
         if($todo->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+            return $this->errorResponse('Bu todoya erişim yetkiniz yok', 403);
         }
 
-        return response()->json($todo, 200);
+        return $this->successResponse($todo, 'Todo detayı getirildi', 200);
     }
 
     /**
@@ -53,11 +53,11 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);
 
         if($todo->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+            return $this->errorResponse('Bu todoya erişim yetkiniz yok', 403);
         }
 
         $todo->update($request->only(['title', 'description']));
-        return response()->json($todo, 200);
+        return $this->successResponse($todo, 'Todo güncellendi', 200);
     }
 
     /**
@@ -68,11 +68,11 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);
 
         if($todo->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+            return $this->errorResponse('Bu todoya erişim yetkiniz yok', 403);
         }
 
         $todo->delete();
-        return response()->json(["message" => "Todo silindi."], 200);
+        return $this->successResponse(null, 'Todo silindi', 200);
     }
 
     public function toggle(Request $request, string $id)
@@ -80,10 +80,11 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);
 
         if($todo->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+            return $this->errorResponse('Bu todoya erişim yetkiniz yok', 403);
         }
         $todo->is_completed = !$todo->is_completed;
         $todo->save();
-        return response()->json($todo, 200);
+        $message = $todo->is_completed ? 'Todo tamamlandı olarak işaretlendi' : 'Todo tamamlanmadı olarak işaretlendi';
+        $this->successResponse($todo, $message, 200);
     }
 }

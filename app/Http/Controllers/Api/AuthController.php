@@ -19,17 +19,17 @@ class AuthController extends Controller
             'password' => $validated['password'],
         ]);
         $token = $user->createToken('api-token')->plainTextToken;
-        return response()->json(['user' => $user, 'token' => $token],201);
+        return $this->successResponse(['user' => $user, 'token' => $token], 'Kayıt başarılı', 201);
     }
 
     public function login(LoginRequest $request){
         $user = User::where('email', $request->email)->first();
 
         if(!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Geçersiz email veya şifre'],401);
+            return $this->errorResponse('Geçersiz email veya şifre', 401);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
-        return response()->json(['user'=> $user, 'token'=>$token], 200);
+        return $this->successResponse(['user' => $user, 'token' => $token], 'Giriş başarılı', 200);
     }
 }
