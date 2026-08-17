@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Todo;
 use App\Models\User;
+use App\Http\Requests\StoreTodoRequest;
 
 class TodoController extends Controller
 {
@@ -21,7 +22,7 @@ class TodoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreTodoRequest $request)
     {
         $user = $request->user();
         $todo = $user->todos()->create($request->only(['title', 'description']));

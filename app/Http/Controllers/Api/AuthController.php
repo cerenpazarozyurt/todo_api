@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function register(Request $request){
+    public function register(RegisterRequest $request){
         $validated = $request->only(['name', 'email', 'password']);
         $user = User::create([
             'name' => $validated['name'],
@@ -20,7 +22,7 @@ class AuthController extends Controller
         return response()->json(['user' => $user, 'token' => $token],201);
     }
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
         $user = User::where('email', $request->email)->first();
 
         if(!$user || !Hash::check($request->password, $user->password)) {
