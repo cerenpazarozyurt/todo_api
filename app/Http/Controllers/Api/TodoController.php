@@ -23,7 +23,9 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = $request->user();
+        $todo = $user->todos()->create($request->only(['title', 'description']));
+        return response()->json($todo, 201);
     }
 
     /**
