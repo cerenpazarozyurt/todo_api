@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreTodoRequest;
+use App\Http\Requests\UpdateTodoRequest;
 use App\Models\Todo;
 use App\Models\User;
-use App\Http\Requests\StoreTodoRequest;
+
 
 class TodoController extends Controller
 {
@@ -46,9 +48,16 @@ class TodoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTodoRequest $request, string $id)
     {
-        //
+        $todo = Todo::findOrFail($id);
+
+        if($todo->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Bu todoya erişim yetkiniz yok'],403);
+        }
+
+        $todo->update($request->only(['title', 'description']));
+        return response()->json($todo, 200);
     }
 
     /**
