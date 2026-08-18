@@ -85,6 +85,6 @@ class TodoController extends Controller
         $todo->is_completed = !$todo->is_completed;
         $todo->save();
         $message = $todo->is_completed ? 'Todo tamamlandı olarak işaretlendi' : 'Todo tamamlanmadı olarak işaretlendi';
-        $this->successResponse($todo, $message, 200);
+        return $this->successResponse($todo, $message, 200);
     }
 }
