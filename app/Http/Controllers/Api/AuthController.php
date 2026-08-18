@@ -32,4 +32,10 @@ class AuthController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
         return $this->successResponse(['user' => $user, 'token' => $token], 'Giriş başarılı', 200);
     }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return $this->successResponse(null, 'Çıkış yapıldı');
+    }
 }
