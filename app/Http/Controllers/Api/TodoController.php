@@ -18,7 +18,13 @@ class TodoController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        return $this->successResponse($user->todos, 'Todolar listelendi', 200);
+        $query = $user->todos();
+
+        if ($request->has('is_completed')) {
+            $query->where('is_completed', $request->boolean('is_completed'));
+        }
+        $todos = $query->get();
+        return $this->successResponse($todos, 'Todolar listelendi', 200);
     }
 
     /**
