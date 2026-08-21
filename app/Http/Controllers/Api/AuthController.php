@@ -18,8 +18,7 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'password' => $validated['password'],
         ]);
-        $token = $user->createToken('api-token')->plainTextToken;
-        return $this->successResponse(['user' => $user, 'token' => $token], 'Kayıt başarılı', 201);
+        return $this->successResponse(['user' => $user], 'Kayıt başarılı, giriş yapabilirsiniz.', 201);
     }
 
     public function login(LoginRequest $request){
